@@ -7,8 +7,6 @@ const { initRoutes } = require("./api/books/routes");
 const { initAuthRoutes } = require("./api/login/routes");
 const { initUserRoutes } = require("./api/users/routes");
 const cors = require('cors');
-const { initAuthRoutes } = require("./api/login/routes");
-const { initUserRoutes } = require("./api/users/routes");
 
 
 const corsOptions = {
