@@ -6,6 +6,7 @@ function createBookRoutes(limiters) {
     return {
         'books': {
             method : 'GET',
+            basePath: 'books',
             versions : [
                 
                 {
@@ -43,6 +44,8 @@ function createBookRoutes(limiters) {
         // POST /books (protégé)
         'books_create': {
             method: 'POST',
+            basePath: 'books',
+            protected: true,
             versions: [
                 {
                     vnumber: 'v1',
@@ -60,6 +63,7 @@ function createBookRoutes(limiters) {
         // PUT /books/:id (protégé)
         'books_update': {
             method: 'PUT',
+            basePath: 'books',
             params: true,
             protected: true,
             versions: [
@@ -79,6 +83,7 @@ function createBookRoutes(limiters) {
         // DELETE /books/:id (protégé)
         'books_delete': {
             method: 'DELETE',
+            basePath: 'books',
             params: true,
             protected: true,
             versions: [

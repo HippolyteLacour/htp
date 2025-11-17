@@ -6,6 +6,8 @@ function createUserRoutes(limiters) {
     return {
         'users': {
             method : 'GET',
+            basePath: 'user',
+            params: true,
             versions : [
                 
                 {
