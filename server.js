@@ -7,6 +7,8 @@ const { initRoutes } = require("./api/books/routes");
 const { initAuthRoutes } = require("./api/login/routes");
 const { initUserRoutes } = require("./api/users/routes");
 const cors = require('cors');
+const { initAuthRoutes } = require("./api/login/routes");
+const { initUserRoutes } = require("./api/users/routes");
 
 
 const corsOptions = {
@@ -23,7 +25,8 @@ app.use(express.json());
 
 const limiters = {
     ONE_SEC : rateLimit({limit: 1, windowMs: 1000, message: "Please retry after 1 second"}),
-    FIVE_SEC : rateLimit({limit: 1, windowMs: 5000, message: "Please retry after 5 seconds"})
+    FIVE_SEC : rateLimit({limit: 1, windowMs: 5000, message: "Please retry after 5 seconds"}),
+    UNLIMITED_SEC : rateLimit({limit: 30000, windowMs: 1000, message: "NO LIMIT"}),
 }
 
 initRoutes(app, limiters);
