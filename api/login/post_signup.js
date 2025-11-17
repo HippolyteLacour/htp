@@ -4,7 +4,7 @@ const hateoas = require("../../utils/hateoas");
 module.exports = async function(req, res) {
    const { username, password } = req.body;
    try {
-       const user = await db_users.postById(username, password);
+       const user = await db_users.signup(username, password);
        const id = user.id || user.insertId || user;
        user._links = hateoas.generateAuthLinks(req);
 
