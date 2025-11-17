@@ -67,7 +67,7 @@ Note : le script `token` dans `package.json` utilise une syntaxe Windows (`node 
 ```
 node ./scripts/generate_jwt.js
 ```
- 
+Swagger UI : http://localhost:3000/api-docs
  
 ### Linux (Debian/Ubuntu)
  
