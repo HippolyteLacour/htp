@@ -6,6 +6,7 @@ function createAuthRoutes(limiters) {
     return {
         'signin': {
             method : 'POST',
+            basePath: 'signin',
             versions : [
                 
                 {
@@ -18,6 +19,7 @@ function createAuthRoutes(limiters) {
 
         'signup': {
             method: 'POST',
+            basePath: 'signup',
             versions: [
                 {
                     limiters: limiters.FIVE_SEC,
