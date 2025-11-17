@@ -2,12 +2,25 @@ const users = require("./../mockDB/users");
 const { hashPassword, verifyPassword } = require("../utils/auth");
  
 module.exports = {
-    getAll: async (limit, page) => {
-        const startIndex = (page - 1) * limit;
-        return users.slice(startIndex, startIndex + limit);
+    getAll: async (idUser) => {
+        const actualUser = users.find((u) => u.id === idUser);
+        console.log("actualUser", actualUser);
+        if(actualUser.admin !== true){
+            throw "Access denied";
+        }
+        return users;
     },
  
-    getById: async (id) => {
+    getById: async (id, idUser) => {
+        const actualUser = users.find((u) => u.id === idUser);
+        console.log("actualUser", actualUser);
+
+        if(actualUser.admin !== true){
+            console.log("Access denied");
+            throw "Access denied";
+        }
+
+        
         const user = users.find((u) => u.id === id);
         if (!user) {
             throw "User not found";
@@ -16,7 +29,9 @@ module.exports = {
     },
  
     signin: async (username, password) => {
-        if (!username || !password) {
+
+
+        if (!username) {
             throw "username and password are required";
         }
  
@@ -26,19 +41,19 @@ module.exports = {
         );
  
         if (!user) {
-            throw "Invalid credentials";
+            throw "User Does not exist";
         }
  
         // If stored as hashed (passwordHash + passwordSalt), verify
         if (user.passwordHash && user.passwordSalt) {
             const ok = verifyPassword(password, user.passwordHash, user.passwordSalt);
-            if (!ok) throw "Invalid credentials";
+            if (!ok) throw "Password incorrect";
             return user;
         }
  
         // Fallback: if stored as plain password, compare and migrate to hashed storage
         if (user.password) {
-            if (user.password !== password) throw "Invalid credentials";
+            if (user.password !== password) throw "Password incorrect";
  
             // migrate: hash and replace plain password
             const { salt, hash } = hashPassword(password);
@@ -70,6 +85,7 @@ module.exports = {
             username: username,
             passwordHash: hash,
             passwordSalt: salt,
+            admin: false,
         };
  
         users.push(newUser);

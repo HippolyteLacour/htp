@@ -16,6 +16,7 @@ module.exports = async function(req, res) {
 
        return res.status(201).json(response);
    } catch (error) {
-       return res.status(400).json({ message: "l'identifiant et le mot de passe sont requis."});
+       console.error(error);
+       return res.status(400).json({ message: error});
    }
 }
