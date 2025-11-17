@@ -1,0 +1,295 @@
+openapi: 3.0.0
+info:
+  title: Books API (auto-generated)
+  version: 1.0.0
+  description: OpenAPI 3.0 specification generated from createBookRoutes
+  contact:
+    name: Rogliano Hina
+servers:
+  - url: http://localhost:3000
+    description: Local server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource identifier
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Le titre
+        author:
+          type: string
+          example: Auteur
+      required:
+        - title
+        - author
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+tags:
+  - name: apiv1
+    description: API v1
+  - name: apiv2
+    description: API v2
+paths:
+  /api/v1/books:
+    get:
+      tags:
+        - apiv1
+      summary: GET /api/v1/books
+      operationId: v1_books_get
+      responses:
+        '200':
+          description: Liste des ressources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      tags:
+        - apiv1
+      summary: POST /api/v1/books
+      operationId: v1_books_create_post
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      security:
+        - bearerAuth: []
+  /api/v2/books:
+    get:
+      tags:
+        - apiv2
+      summary: GET /api/v2/books
+      operationId: v2_books_get
+      responses:
+        '200':
+          description: Liste des ressources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      tags:
+        - apiv2
+      summary: POST /api/v2/books
+      operationId: v2_books_create_post
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      security:
+        - bearerAuth: []
+  /api/v1/book/{id}:
+    get:
+      tags:
+        - apiv1
+      summary: GET /api/v1/book/{id}
+      operationId: v1_book_get
+      responses:
+        '200':
+          description: Objet trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+  /api/v2/book/{id}:
+    get:
+      tags:
+        - apiv2
+      summary: GET /api/v2/book/{id}
+      operationId: v2_book_get
+      responses:
+        '200':
+          description: Objet trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+  /api/v1/books/{id}:
+    put:
+      tags:
+        - apiv1
+      summary: PUT /api/v1/books/{id}
+      operationId: v1_books_update_put
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - apiv1
+      summary: DELETE /api/v1/books/{id}
+      operationId: v1_books_delete_delete
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      security:
+        - bearerAuth: []
+  /api/v2/books/{id}:
+    put:
+      tags:
+        - apiv2
+      summary: PUT /api/v2/books/{id}
+      operationId: v2_books_update_put
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - apiv2
+      summary: DELETE /api/v2/books/{id}
+      operationId: v2_books_delete_delete
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      security:
+        - bearerAuth: []
