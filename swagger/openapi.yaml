@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Books API (auto-generated)
+  title: HackTonPote API (auto-generated)
   version: 1.0.0
-  description: OpenAPI 3.0 specification generated from createBookRoutes
+  description: OpenAPI 3.0 specification - Books, Authentication & Users API
   contact:
     name: Rogliano Hina
 servers:
@@ -35,9 +35,52 @@ components:
         author:
           type: string
           example: Auteur
+        _links:
+          type: object
+          description: HATEOAS links
       required:
         - title
         - author
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: john_doe
+        password:
+          type: string
+          example: secret123
+        _links:
+          type: object
+          description: HATEOAS links
+      required:
+        - username
+        - password
+    AuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: john_doe
+        password:
+          type: string
+          example: secret123
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          type: object
+          description: HATEOAS links
     Error:
       type: object
       properties:
@@ -50,12 +93,16 @@ tags:
     description: API v1
   - name: apiv2
     description: API v2
+  - name: authentication
+    description: Authentication endpoints
+  - name: users
+    description: Users endpoints
 paths:
   /api/v1/books:
     get:
       tags:
         - apiv1
-      summary: GET /api/v1/books
+      summary: GET endpoint
       operationId: v1_books_get
       responses:
         '200':
@@ -69,7 +116,7 @@ paths:
     post:
       tags:
         - apiv1
-      summary: POST /api/v1/books
+      summary: POST endpoint
       operationId: v1_books_create_post
       responses:
         '201':
@@ -78,25 +125,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Book'
-      security:
-        - bearerAuth: []
   /api/v2/books:
     get:
       tags:
         - apiv2
-      summary: GET /api/v2/books
+      summary: GET endpoint
       operationId: v2_books_get
       responses:
         '200':
@@ -110,7 +149,7 @@ paths:
     post:
       tags:
         - apiv2
-      summary: POST /api/v2/books
+      summary: POST endpoint
       operationId: v2_books_create_post
       responses:
         '201':
@@ -119,29 +158,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Book'
-      security:
-        - bearerAuth: []
   /api/v1/book/{id}:
     get:
       tags:
         - apiv1
-      summary: GET /api/v1/book/{id}
+      summary: GET endpoint
       operationId: v1_book_get
       responses:
         '200':
-          description: Objet trouvé
+          description: Ressource trouvée
           content:
             application/json:
               schema:
@@ -158,11 +189,11 @@ paths:
     get:
       tags:
         - apiv2
-      summary: GET /api/v2/book/{id}
+      summary: GET endpoint
       operationId: v2_book_get
       responses:
         '200':
-          description: Objet trouvé
+          description: Ressource trouvée
           content:
             application/json:
               schema:
@@ -179,7 +210,7 @@ paths:
     put:
       tags:
         - apiv1
-      summary: PUT /api/v1/books/{id}
+      summary: PUT endpoint
       operationId: v1_books_update_put
       responses:
         '200':
@@ -213,7 +244,7 @@ paths:
     delete:
       tags:
         - apiv1
-      summary: DELETE /api/v1/books/{id}
+      summary: DELETE endpoint
       operationId: v1_books_delete_delete
       responses:
         '204':
@@ -238,7 +269,7 @@ paths:
     put:
       tags:
         - apiv2
-      summary: PUT /api/v2/books/{id}
+      summary: PUT endpoint
       operationId: v2_books_update_put
       responses:
         '200':
@@ -272,7 +303,7 @@ paths:
     delete:
       tags:
         - apiv2
-      summary: DELETE /api/v2/books/{id}
+      summary: DELETE endpoint
       operationId: v2_books_delete_delete
       responses:
         '204':
@@ -293,3 +324,89 @@ paths:
         - $ref: '#/components/parameters/IdParam'
       security:
         - bearerAuth: []
+  /api/signin:
+    post:
+      tags:
+        - authentication
+      summary: POST endpoint
+      operationId: signin_post
+      responses:
+        '201':
+          description: Authentification réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+  /api/signup:
+    post:
+      tags:
+        - authentication
+      summary: POST endpoint
+      operationId: signup_post
+      responses:
+        '201':
+          description: Authentification réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+  /api/users:
+    get:
+      tags:
+        - users
+      summary: GET endpoint
+      operationId: users_get
+      responses:
+        '200':
+          description: Liste des ressources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /api/user/{id}:
+    get:
+      tags:
+        - users
+      summary: GET endpoint
+      operationId: user_get
+      responses:
+        '200':
+          description: Ressource trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - $ref: '#/components/parameters/IdParam'

@@ -106,6 +106,85 @@ function generateCollectionLinks(req, page = 1, totalPages = 1, limit = 10) {
 }
 
 /**
+ * Génère les liens HATEOAS pour une ressource utilisateur
+ * @param {Object} req - Objet requête Express
+ * @param {Object} user - Objet utilisateur (doit contenir .id)
+ * @returns {Object} Objet contenant les liens HATEOAS
+ */
+function generateUserLinks(req, user) {
+  const baseUrl = getBaseUrl(req);
+
+  return {
+    self: {
+      href: `${baseUrl}/api/user/${user.id}`,
+      method: 'GET',
+      description: 'Récupérer cet utilisateur'
+    },
+    collection: {
+      href: `${baseUrl}/api/users`,
+      method: 'GET',
+      description: 'Récupérer tous les utilisateurs'
+    }
+  };
+}
+
+/**
+ * Génère les liens HATEOAS pour l'authentification
+ * @param {Object} req - Objet requête Express
+ * @returns {Object} Objet contenant les liens HATEOAS
+ */
+function generateAuthLinks(req) {
+  const baseUrl = getBaseUrl(req);
+
+  return {
+    signin: {
+      href: `${baseUrl}/api/signin`,
+      method: 'POST',
+      description: 'Se connecter'
+    },
+    signup: {
+      href: `${baseUrl}/api/signup`,
+      method: 'POST',
+      description: 'Créer un compte'
+    },
+    users: {
+      href: `${baseUrl}/api/users`,
+      method: 'GET',
+      description: 'Récupérer tous les utilisateurs'
+    }
+  };
+}
+
+/**
+ * Génère les liens HATEOAS pour la collection d'utilisateurs
+ * @param {Object} req - Objet requête Express
+ * @returns {Object} Objet contenant les liens HATEOAS
+ */
+function generateUsersLinks(req) {
+  const baseUrl = getBaseUrl(req);
+
+  return {
+    self: {
+      href: `${baseUrl}/api/users`,
+      method: 'GET',
+      description: 'Collection des utilisateurs'
+    },
+    auth: {
+      signin: {
+        href: `${baseUrl}/api/signin`,
+        method: 'POST',
+        description: 'Se connecter'
+      },
+      signup: {
+        href: `${baseUrl}/api/signup`,
+        method: 'POST',
+        description: 'Créer un compte'
+      }
+    }
+  };
+}
+
+/**
  * Génère les liens racine de l'API pour l'auto-discovery
  * @param {Object} req - Objet requête Express
  * @returns {Object} Objet contenant tous les liens disponibles
@@ -123,6 +202,25 @@ function generateApiRootLinks(req) {
       href: `${baseUrl}/api-docs`,
       method: 'GET',
       description: "Documentation Swagger de l'API"
+    },
+    auth: {
+      signin: {
+        href: `${baseUrl}/api/signin`,
+        method: 'POST',
+        description: 'Se connecter'
+      },
+      signup: {
+        href: `${baseUrl}/api/signup`,
+        method: 'POST',
+        description: 'Créer un compte'
+      }
+    },
+    users: {
+      collection: {
+        href: `${baseUrl}/api/users`,
+        method: 'GET',
+        description: 'Collection des utilisateurs'
+      }
     },
     books: {
       v1: {
@@ -182,6 +280,9 @@ module.exports = {
   generateCollectionLinks,
   generateApiRootLinks,
   addLinksToBook,
-  addLinksToBooks
+  addLinksToBooks,
+  generateUserLinks,
+  generateAuthLinks,
+  generateUsersLinks
 };
 // ...existing code...
