@@ -7,7 +7,7 @@ module.exports= async function(req, res){
 
   const users = await db_users.getAll(limit,page)
   users.forEach(user => {
-      user._links = hateoas.generateUserLinks(req,user);
+      user._links = hateoas.generateUsersLinks(req);
   });
 
   res.json(users);

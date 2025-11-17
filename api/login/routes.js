@@ -2,7 +2,7 @@
 
 const requireWriteAccess = require("../../middleware/middleware");
 
-function createBookRoutes(limiters) {
+function createAuthRoutes(limiters) {
     return {
         'signin': {
             method : 'POST',
@@ -29,9 +29,9 @@ function createBookRoutes(limiters) {
     }
 };
 
-function initRoutes(app, limiters) {
+function initAuthRoutes(app, limiters) {
 
-    const bookRoutes = createBookRoutes(limiters);
+    const authRoutes = createAuthRoutes(limiters);
 
     /** 
     const bookRoutes = {
@@ -54,8 +54,8 @@ function initRoutes(app, limiters) {
 */
 
 
-    for (let key in bookRoutes) {
-        const route = bookRoutes[key];
+    for (let key in authRoutes) {
+        const route = authRoutes[key];
         route.versions.forEach(version => {
             const base = "/api/" + (route.basePath || "books");
             const path = route.params ? base + "/:id" : base;
@@ -71,4 +71,4 @@ function initRoutes(app, limiters) {
 
 }
 
-module.exports = { createBookRoutes,initRoutes}
+module.exports = { createAuthRoutes,initAuthRoutes}

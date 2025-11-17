@@ -2,7 +2,7 @@
 
 const requireWriteAccess = require("../../middleware/middleware");
 
-function createBookRoutes(limiters) {
+function createUserRoutes(limiters) {
     return {
         'users': {
             method : 'GET',
@@ -30,9 +30,9 @@ function createBookRoutes(limiters) {
     }
 };
 
-function initRoutes(app, limiters) {
+function initUserRoutes(app, limiters) {
 
-    const bookRoutes = createBookRoutes(limiters);
+    const userRoutes = createUserRoutes(limiters);
 
     /** 
     const bookRoutes = {
@@ -55,10 +55,10 @@ function initRoutes(app, limiters) {
 */
 
 
-    for (let key in bookRoutes) {
-        const route = bookRoutes[key];
+    for (let key in userRoutes) {
+        const route = userRoutes[key];
         route.versions.forEach(version => {
-            const base = "/api/" + (route.basePath || "books");
+            const base = "/api/" + (route.basePath || "users");
             const path = route.params ? base + "/:id" : base;
 
             const handlers = [version.limiters];
@@ -72,4 +72,4 @@ function initRoutes(app, limiters) {
 
 }
 
-module.exports = { createBookRoutes,initRoutes}
+module.exports = { createUserRoutes,initUserRoutes}

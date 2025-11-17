@@ -3,16 +3,16 @@ const db_users = require("../../../proxy/db_users");
 const hateoas = require("../../../utils/hateoas");
 
 module.exports = async function(req, res) {
-   const { id, password } = req.body;
+   const { username, password } = req.body;
    try {
-         const user = await db_users.postById(id, password);
+       const user = await db_users.postById(username, password);
        const id = user.id || user.insertId || user;
-       user._links = hateoas.generateUserLinks(req,'users', 'user', id);
+       user._links = hateoas.generateAuthLinks(req);
 
        const response = {
            message: "User créé avec succès",
            user,
-           _links: hateoas.generateUserLinks(req, 'users')
+           _links: hateoas.generateAuthLinks(req)
        };
 
        return res.status(201).json(response);
