@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const users = require('../mockDB/users_hashed');
+const users = require('../mockDB/users');
 
 /**
  * Vérifie un mot de passe
