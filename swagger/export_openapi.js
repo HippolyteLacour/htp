@@ -123,9 +123,10 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
             route.versions.forEach(version => {
                 // For versioned routes (books)
                 if (version.vnumber) {
-                    const versionTag = `apiv${version.vnumber.replace(/^v/, '')}`;
+                    // Tag name for books should be 'Books V1', 'Books V2', etc.
+                    const versionTag = `Books ${version.vnumber.toUpperCase()}`;
                     if (!spec.tags.find(t => t.name === versionTag)) {
-                        spec.tags.push({ name: versionTag, description: `API ${version.vnumber}` });
+                        spec.tags.push({ name: versionTag, description: `Books ${version.vnumber.toUpperCase()}` });
                     }
 
                     const basePath = `/api/${version.vnumber}/${resourceBase}`;
@@ -143,12 +144,30 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
                         spec.tags.push({ name: tagName, description: `${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} endpoints` });
                     }
 
-                    const basePath = `/api/${resourceBase}`;
-                    const pathKey = route.params ? `${basePath}/{id}` : basePath;
+                    // Determine resource base - force plural 'users' for the collection
+                    const resourceBaseName = (resourceType === 'users' && key === 'users') ? 'users' : resourceBase;
+                    const basePath = `/api/${resourceBaseName}`;
+                    // For the users collection (key 'users') we want the collection path (no {id})
+                    const paramsFlag = (resourceType === 'users' && key === 'users') ? false : !!route.params;
+                    const pathKey = paramsFlag ? `${basePath}/{id}` : basePath;
                     spec.paths[pathKey] = spec.paths[pathKey] || {};
 
                     const method = route.method.toLowerCase();
-                    const operationId = `${resourceBase}_${method}`;
+                    // Build more explicit operationId for auth and users routes
+                    let operationId;
+                    if (resourceType === 'authentication') {
+                        // e.g. post_signin, post_signup
+                        operationId = `${method}_${route.basePath || resourceBase}`;
+                    } else if (resourceType === 'users') {
+                        // For users: collection -> get_users, single -> getuser (no underscore)
+                        if (key === 'user' && method === 'get') {
+                            operationId = 'getuser';
+                        } else {
+                            operationId = `${method}_${key}`;
+                        }
+                    } else {
+                        operationId = `${resourceBase}_${method}`;
+                    }
 
                     addOperation(spec.paths[pathKey], method, operationId, route, [tagName], schemaRef);
                 }
