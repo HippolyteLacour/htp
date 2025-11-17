@@ -18,6 +18,8 @@ function createUserRoutes(limiters) {
 
         'user': {
             method: 'GET',
+            basePath: 'user',
+            params: true,
             versions: [
                 {
                     limiters: limiters.FIVE_SEC,
