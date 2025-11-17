@@ -6,6 +6,7 @@ function createBookRoutes(limiters) {
     return {
         'books': {
             method : 'GET',
+            basePath: 'books',
             versions : [
                 
                 {
@@ -25,15 +26,16 @@ function createBookRoutes(limiters) {
         'book': {
             basePath: 'book',
             method: 'GET',
+            params: true,
             versions: [
                 {
                     vnumber: 'v1',
-                    limiters: limiters.FIVE_SEC,
+                    limiters: limiters.UNLIMITED_SEC,
                     routeCall: require('./v1/get_book')
                 },
                 {
                     vnumber: 'v2',
-                    limiters: limiters.FIVE_SEC,
+                    limiters: limiters.UNLIMITED_SEC,
                     routeCall: require('./v2/get_book')
                 }
             ]
@@ -42,6 +44,8 @@ function createBookRoutes(limiters) {
         // POST /books (protégé)
         'books_create': {
             method: 'POST',
+            basePath: 'books',
+            protected: true,
             versions: [
                 {
                     vnumber: 'v1',
@@ -59,6 +63,7 @@ function createBookRoutes(limiters) {
         // PUT /books/:id (protégé)
         'books_update': {
             method: 'PUT',
+            basePath: 'books',
             params: true,
             protected: true,
             versions: [
@@ -78,6 +83,7 @@ function createBookRoutes(limiters) {
         // DELETE /books/:id (protégé)
         'books_delete': {
             method: 'DELETE',
+            basePath: 'books',
             params: true,
             protected: true,
             versions: [
@@ -127,7 +133,8 @@ function initRoutes(app, limiters) {
             const base = "/api/" + version.vnumber + "/" + (route.basePath || "books");
             const path = route.params ? base + "/:id" : base;
 
-            const handlers = [version.limiters];
+            const handlers = [];
+            if (version.limiters) handlers.push(version.limiters);
             if (route.protected) handlers.push(requireWriteAccess);
             handlers.push(version.routeCall);
 

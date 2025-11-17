@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "token": "node .\\scripts\\generate_jwt.js"
+    "token": "node .\\scripts\\generate_jwt.js",
+    "generate:openapi": "node .\\swagger\\export_openapi.js"
   },
   "author": "",
   "license": "ISC",

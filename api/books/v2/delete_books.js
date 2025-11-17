@@ -1,3 +1,5 @@
+const db_books = require("../../../proxy/db_books");
+const hateoas = require("../../../utils/hateoas");
 
 module.exports = async function(req, res) {
     const id = parseInt(req.params.id);
