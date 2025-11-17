@@ -28,10 +28,12 @@ function createBookRoutes(limiters) {
             versions: [
                 {
                     vnumber: 'v1',
+                    limiters: limiters.UNLIMITED_SEC,
                     routeCall: require('./v1/get_book')
                 },
                 {
                     vnumber: 'v2',
+                    limiters: limiters.UNLIMITED_SEC,
                     routeCall: require('./v2/get_book')
                 }
             ]
