@@ -81,6 +81,9 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
     function processRoutes(routes, resourceType, schemaRef) {
         for (const key in routes) {
             const route = routes[key];
+            // attach metadata so addOperation can make special-case decisions
+            route._routeKey = key;
+            route._resourceType = resourceType;
             const derived = route.basePath ? route.basePath : key.replace(/(_create|_update|_delete)$/, '');
             const resourceBase = derived;
 
@@ -148,10 +151,34 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
             responses: {}
         };
 
+        // Special-case description for GET single-user: only user with id=1 can view other users
+        try {
+            if (route && route._resourceType === 'users' && route._routeKey === 'user' && method === 'get') {
+                operation.description = 'Access control: only the user with id=1 can view other users. Other users can only view their own profile.';
+            }
+        } catch (e) {}
+
         // use hasParams (computed by caller) instead of route.params so caller can
         // override incorrect route metadata (e.g. users collection marked params:true)
         if (hasParams) {
             operation.parameters = [{ $ref: '#/components/parameters/IdParam' }];
+        }
+
+        // Special-case: for the single user GET (key 'user') support an optional
+        // query parameter 'idUser' so requests like /api/user/1?idUser=1 are valid
+        try {
+            if (route && route._resourceType === 'users' && route._routeKey === 'user' && method === 'get') {
+                operation.parameters = operation.parameters || [];
+                operation.parameters.push({
+                    name: 'idUser',
+                    in: 'query',
+                    required: false,
+                    schema: { type: 'integer' },
+                    description: 'Optional duplicate identifier as query parameter'
+                });
+            }
+        } catch (e) {
+            // defensive: if route metadata is missing, skip the special-case
         }
 
         // Handle different methods and schemas
