@@ -171,5 +171,3 @@ Si vous obtenez une réponse JSON ou la page Swagger, le serveur fonctionne corr
 - Problèmes de chemin pour le script `token` sur macOS/Linux : exécuter `node ./scripts/generate_jwt.js` directement.
  
 ---
- 
-Si vous souhaitez que j'ajoute des instructions supplémentaires (par ex. Docker, variables d'environnement, ou un script cross-platform pour `token`), dites-le et je l'ajouterai.
