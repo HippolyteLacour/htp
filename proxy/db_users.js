@@ -25,7 +25,6 @@ module.exports = {
         if (!user) {
             throw "User not found";
         }
-        console.log("user", user);
         return user;
     },
  
