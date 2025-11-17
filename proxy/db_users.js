@@ -1,4 +1,4 @@
-const books = require("./../mockDB/users");
+const users = require("./../mockDB/users");
 
 module.exports = {
     getAll : async (limit, page) => {
