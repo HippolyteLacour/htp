@@ -25,6 +25,7 @@ function createBookRoutes(limiters) {
         'book': {
             basePath: 'book',
             method: 'GET',
+            params: true,
             versions: [
                 {
                     vnumber: 'v1',
