@@ -3,7 +3,7 @@
 Nom du projet : Hack Ton Pote
  
 Membres :
-- BESSON Baptiste (vous)
+- BESSON Baptiste
 - FUERTES Bryce
 - LACOUR Hippolyte
 - STRAPUTICARI Luca
