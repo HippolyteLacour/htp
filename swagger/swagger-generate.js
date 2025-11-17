@@ -94,13 +94,14 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
                     }
 
                     const basePath = `/api/${version.vnumber}/${resourceBase}`;
-                    const pathKey = route.params ? `${basePath}/{id}` : basePath;
+                    const paramsFlag = !!route.params;
+                    const pathKey = paramsFlag ? `${basePath}/{id}` : basePath;
                     spec.paths[pathKey] = spec.paths[pathKey] || {};
 
                     const method = route.method.toLowerCase();
                     const operationId = `${version.vnumber}_${key}_${method}`;
 
-                    addOperation(spec.paths[pathKey], method, operationId, route, [versionTag], schemaRef);
+                    addOperation(spec.paths[pathKey], method, operationId, route, [versionTag], schemaRef, paramsFlag);
                 } else {
                     // For non-versioned routes (auth, users)
                     const tagName = resourceType;
@@ -133,13 +134,13 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
                         operationId = `${resourceBase}_${method}`;
                     }
 
-                    addOperation(spec.paths[pathKey], method, operationId, route, [tagName], schemaRef);
+                    addOperation(spec.paths[pathKey], method, operationId, route, [tagName], schemaRef, paramsFlag);
                 }
             });
         }
     }
 
-    function addOperation(pathObj, method, operationId, route, tags, schemaRef) {
+    function addOperation(pathObj, method, operationId, route, tags, schemaRef, hasParams) {
         const operation = {
             tags: tags,
             summary: `${route.method} ${Object.keys(pathObj).length > 0 ? '' : 'endpoint'}`,
@@ -147,12 +148,14 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
             responses: {}
         };
 
-        if (route.params) {
+        // use hasParams (computed by caller) instead of route.params so caller can
+        // override incorrect route metadata (e.g. users collection marked params:true)
+        if (hasParams) {
             operation.parameters = [{ $ref: '#/components/parameters/IdParam' }];
         }
 
         // Handle different methods and schemas
-        if (method === 'get' && !route.params) {
+        if (method === 'get' && !hasParams) {
             operation.responses['200'] = {
                 description: 'Liste des ressources',
                 content: {
