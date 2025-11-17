@@ -181,6 +181,24 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
             // defensive: if route metadata is missing, skip the special-case
         }
 
+        // Special-case: for the users collection GET we require an idUser query
+        // parameter (must be 1 to be allowed to view other users)
+        try {
+            if (route && route._resourceType === 'users' && route._routeKey === 'users' && method === 'get') {
+                operation.parameters = operation.parameters || [];
+                // ensure the collection GET has a required query param
+                operation.parameters.push({
+                    name: 'idUser',
+                    in: 'query',
+                    required: true,
+                    schema: { type: 'integer' },
+                    description: 'Required query parameter.'
+                });
+            }
+        } catch (e) {
+            // defensive: skip if metadata missing
+        }
+
         // Handle different methods and schemas
         if (method === 'get' && !hasParams) {
             operation.responses['200'] = {

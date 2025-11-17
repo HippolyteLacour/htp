@@ -216,6 +216,22 @@ function buildOpenApiSpec(bookRoutes, authRoutes, userRoutes) {
             // defensive: skip if metadata missing
         }
 
+        // For the users collection GET, require the idUser query parameter (must be 1 to view others)
+        try {
+            if (route && route._resourceType === 'users' && route._routeKey === 'users' && method === 'get') {
+                operation.parameters = operation.parameters || [];
+                operation.parameters.push({
+                    name: 'idUser',
+                    in: 'query',
+                    required: true,
+                    schema: { type: 'integer' },
+                    description: 'Required query parameter. Must be idUser=1 to view other users.'
+                });
+            }
+        } catch (e) {
+            // defensive: skip if metadata missing
+        }
+
         // Handle different methods and schemas
         if (method === 'get' && !hasParams) {
             operation.responses['200'] = {
