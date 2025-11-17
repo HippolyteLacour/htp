@@ -1,6 +1,5 @@
-// ...existing code...
-const db_users = require("../../../proxy/db_users");
-const hateoas = require("../../../utils/hateoas");
+const db_users = require("../../proxy/db_users");
+const hateoas = require("../../utils/hateoas");
 
 module.exports = async function(req, res) {
    const { username, password } = req.body;

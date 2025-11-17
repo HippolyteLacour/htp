@@ -4,6 +4,8 @@ const PORT = 3000;
 const { default: rateLimit } = require("express-rate-limit");
 const swaggerGenerate = require("./swagger/swagger-generate");
 const { initRoutes } = require("./api/books/routes");
+const { initAuthRoutes } = require("./api/login/routes");
+const { initUserRoutes } = require("./api/users/routes");
 const cors = require('cors');
 
 
@@ -25,6 +27,8 @@ const limiters = {
 }
 
 initRoutes(app, limiters);
+initAuthRoutes(app, limiters);
+initUserRoutes(app, limiters);
 
 
 swaggerGenerate(app, limiters);

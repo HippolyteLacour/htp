@@ -125,7 +125,8 @@ function initRoutes(app, limiters) {
             const base = "/api/" + version.vnumber + "/" + (route.basePath || "books");
             const path = route.params ? base + "/:id" : base;
 
-            const handlers = [version.limiters];
+            const handlers = [];
+            if (version.limiters) handlers.push(version.limiters);
             if (route.protected) handlers.push(requireWriteAccess);
             handlers.push(version.routeCall);
 
